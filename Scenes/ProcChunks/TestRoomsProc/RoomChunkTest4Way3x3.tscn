@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cxqwgh6o80n68"]
+
+[ext_resource type="Script" uid="uid://0bkjo584bbyc" path="res://Scripts/RoomGen/RoomChunk.cs" id="1_30xym"]
+[ext_resource type="PackedScene" uid="uid://13kiobijse18" path="res://Scenes/Prefabs/TestRoomsP/TestRoom 3x3 4way.tscn" id="2_30xym"]
+
+[node name="RoomChunkTestStraight3x3" type="Node3D" unique_id=776587638 node_paths=PackedStringArray("RoomCenter")]
+script = ExtResource("1_30xym")
+RoomRadius = 2.0
+RoomCenter = NodePath("RoomCenter")
+
+[node name="TestRoom3x3Straight" parent="." unique_id=744608824 instance=ExtResource("2_30xym")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.1)
+
+[node name="Exits" type="Node3D" parent="." unique_id=372644154]
+
+[node name="ExitSocketR" type="Marker3D" parent="Exits" unique_id=2079134564]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.1, 0, -3.1)
+
+[node name="ExitSocketF" type="Marker3D" parent="Exits" unique_id=858416476]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.1)
+
+[node name="ExitSocketL" type="Marker3D" parent="Exits" unique_id=1379028586]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.1, 0, -3.1)
+
+[node name="RoomCenter" type="Marker3D" parent="." unique_id=2015205633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.1)

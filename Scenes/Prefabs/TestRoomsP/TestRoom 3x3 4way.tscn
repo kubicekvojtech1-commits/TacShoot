@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://13kiobijse18"]
+
+[ext_resource type="Material" uid="uid://bnnif7facgrkx" path="res://Materials/TestFloorCeiling.material" id="2_en82j"]
+[ext_resource type="Material" uid="uid://cfvqyhd22taac" path="res://Materials/TestWall.material" id="3_w21i6"]
+[ext_resource type="Material" uid="uid://cl2ii2k5keuch" path="res://Materials/TestDoor.material" id="4_ryh0p"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_54ssr"]
+
+[node name="TestRoom3x3Straight" type="Node3D" unique_id=744608824]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=105883374]
+use_collision = true
+
+[node name="Floor" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1859503312]
+transform = Transform3D(6, 0, 0, 0, 0.1, 0, 0, 0, 6, 0, -1, 0)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_en82j")
+
+[node name="Ceiling" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1492558465]
+transform = Transform3D(6, 0, 0, 0, 0.1, 0, 0, 0, 6, 0, 1.9, 0)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_en82j")
+
+[node name="EastWallL" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=227368455]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, -1.9997072)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="WestWallL" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1383838642]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, -1.9997072)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="EastWallR" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1451122652]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, 2)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="WestWallR" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=113662323]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, 2)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="PassageE" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1627817620]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, 0)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("4_ryh0p")
+
+[node name="PassageW" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=690695576]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, 0)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("4_ryh0p")
+
+[node name="SouthWallL2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1202219961]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, 1.9998047, 0.45, 3.0500975)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="NorthWallL2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=496166850]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, 1.999805, 0.45, -3.0499024)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="SouthWallR2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1024953499]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, -1.9999025, 0.45, 3.0500975)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="NorthWallR2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=2031270999]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, -1.9999022, 0.45, -3.0499024)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="PassageS2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=616553751]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, 9.745936e-05, 0.45, 3.0500975)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("4_ryh0p")
+
+[node name="PassageN2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=898423412]
+transform = Transform3D(-2, 0, 8.742276e-09, 0, 2.9999998, 0, -1.7484555e-07, 0, -0.099999994, 9.772599e-05, 0.45, -3.0499024)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("4_ryh0p")
+
+[node name="CornerPillar6" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=468566224]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, -3.05, 0.45, 3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="CornerPillar7" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1823879897]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, -3.05, 0.45, -3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="CornerPillar8" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=35966208]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, 3.05, 0.45, 3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")
+
+[node name="CornerPillar9" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=2034943977]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, 3.05, 0.45, -3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_w21i6")

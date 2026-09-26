@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://beqyt87ih6v3w"]
+
+[ext_resource type="Material" uid="uid://bnnif7facgrkx" path="res://Materials/TestFloorCeiling.material" id="1_ltxax"]
+[ext_resource type="Material" uid="uid://cfvqyhd22taac" path="res://Materials/TestWall.material" id="2_ad5qv"]
+[ext_resource type="Material" uid="uid://cl2ii2k5keuch" path="res://Materials/TestDoor.material" id="3_lpult"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_54ssr"]
+
+[node name="TestRoom3x3Straight" type="Node3D" unique_id=744608824]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=105883374]
+use_collision = true
+
+[node name="Floor" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1859503312]
+transform = Transform3D(6, 0, 0, 0, 0.1, 0, 0, 0, 6, 0, -1, 0)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("1_ltxax")
+
+[node name="Ceiling" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1492558465]
+transform = Transform3D(6, 0, 0, 0, 0.1, 0, 0, 0, 6, 0, 1.9, 0)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("1_ltxax")
+
+[node name="NorthWallFull" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1230223884]
+transform = Transform3D(6, 0, 0, 0, 3, 0, 0, 0, 0.1, 0, 0.45, 3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="SouthWallFull" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=95275908]
+transform = Transform3D(6, 0, 0, 0, 3, 0, 0, 0, 0.1, 0, 0.45, -3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="EastWallL" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=227368455]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, -1.9997072)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="EastWallR" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1451122652]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, 2)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="PassageE" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1627817620]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, 3.05, 0.45, 0)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_lpult")
+
+[node name="EastWallL2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=2087496631]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, -1.9997072)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="EastWallR2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1367804712]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, 2)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="PassageE2" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1403025543]
+transform = Transform3D(-8.742278e-08, 0, -0.099999994, 0, 2.9999998, 0, 2, 0, -4.3711386e-09, -3.05, 0.45, 0)
+visible = false
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("3_lpult")
+
+[node name="CornerPillar6" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=468566224]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, -3.05, 0.45, 3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="CornerPillar7" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=1823879897]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, -3.05, 0.45, -3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="CornerPillar8" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=35966208]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, 3.05, 0.45, 3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")
+
+[node name="CornerPillar9" type="CSGMesh3D" parent="CSGCombiner3D" unique_id=2034943977]
+transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 3, 0, 0.1, 0, -4.371139e-09, 3.05, 0.45, -3.05)
+use_collision = true
+mesh = SubResource("BoxMesh_54ssr")
+material = ExtResource("2_ad5qv")

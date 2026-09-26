@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://jrb4ee0joy"]
+
+[ext_resource type="Script" uid="uid://bupffacr1ua03" path="res://Scripts/RoomGen/FacilityGenerator.cs" id="1_l756w"]
+[ext_resource type="PackedScene" uid="uid://cxkw32raoliye" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestStraight3x3.tscn" id="2_0e3vx"]
+[ext_resource type="PackedScene" uid="uid://cxqwgh6o80n68" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTest4Way3x3.tscn" id="2_6j5ir"]
+[ext_resource type="PackedScene" uid="uid://cndjqn82jnf5j" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestTJuncStraight3x3.tscn" id="4_mgc0q"]
+[ext_resource type="PackedScene" uid="uid://b323agsucqfu1" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestTriangle.tscn" id="5_18r40"]
+[ext_resource type="PackedScene" uid="uid://codqqvx16oeaq" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestBlocker.tscn" id="5_bb2iq"]
+[ext_resource type="PackedScene" uid="uid://q3mtllrywd81" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestEND3x3.tscn" id="6_18r40"]
+
+[node name="MainGame" type="Node3D" unique_id=1829931184]
+
+[node name="CorridorGenerator" type="Node3D" parent="." unique_id=1100606455]
+script = ExtResource("1_l756w")
+_roomPrefabs = Array[PackedScene]([ExtResource("2_6j5ir"), ExtResource("2_0e3vx"), ExtResource("4_mgc0q"), ExtResource("5_18r40")])
+_doorBlockerPrefab = ExtResource("5_bb2iq")
+_deadEndPrefab = ExtResource("6_18r40")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1632457696]
+transform = Transform3D(0.058435347, 0.75724256, -0.65051436, 3.7252903e-09, 0.6516279, 0.7585388, 0.9982912, -0.04432548, 0.038078103, -16.025837, 20.801657, 0.8516909)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2040265971]
+
+[node name="Test" type="CSGBox3D" parent="." unique_id=197795800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4596577, 0)

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://q3mtllrywd81"]
+
+[ext_resource type="Script" uid="uid://0bkjo584bbyc" path="res://Scripts/RoomGen/RoomChunk.cs" id="1_prgur"]
+[ext_resource type="PackedScene" uid="uid://dbyha5tvjpn3o" path="res://Scenes/Prefabs/TestRoomsP/TestRoom 3x3 END.tscn" id="2_prgur"]
+
+[node name="RoomChunkTestStraight3x3" type="Node3D" unique_id=776587638 node_paths=PackedStringArray("RoomCenter")]
+script = ExtResource("1_prgur")
+RoomRadius = 2.0
+RoomCenter = NodePath("RoomCenter")
+
+[node name="TestRoom3x3Straight2" parent="." unique_id=744608824 instance=ExtResource("2_prgur")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -3.1)
+
+[node name="RoomCenter" type="Marker3D" parent="." unique_id=744061936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.1)
