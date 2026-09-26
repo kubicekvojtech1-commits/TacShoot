@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 public partial class RoomChunk : Node3D
 {
+	[ExportCategory("Generation Rules")]
+	// How much of the facility budget this room consumes.
+	[Export] public int GenerationCost { get; private set; } = 1;
+	
+	// Higher numbers mean it is more likely to be picked from the pool.
+	[Export] public float SelectionWeight { get; private set; } = 10f;
 	[ExportCategory("Spatial Data")]
 	[Export] public Marker3D RoomCenter { get; private set; }
 

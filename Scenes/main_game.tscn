@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://b323agsucqfu1" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestTriangle.tscn" id="5_18r40"]
 [ext_resource type="PackedScene" uid="uid://codqqvx16oeaq" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestBlocker.tscn" id="5_bb2iq"]
 [ext_resource type="PackedScene" uid="uid://q3mtllrywd81" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestEND3x3.tscn" id="6_18r40"]
+[ext_resource type="Script" uid="uid://xoq1aaxojd4j" path="res://Scripts/TacticalPlayerController.cs" id="8_6y7pd"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54ssr"]
 
 [node name="MainGame" type="Node3D" unique_id=1829931184]
 
@@ -16,10 +19,28 @@ _roomPrefabs = Array[PackedScene]([ExtResource("2_6j5ir"), ExtResource("2_0e3vx"
 _doorBlockerPrefab = ExtResource("5_bb2iq")
 _deadEndPrefab = ExtResource("6_18r40")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1632457696]
-transform = Transform3D(0.058435347, 0.75724256, -0.65051436, 3.7252903e-09, 0.6516279, 0.7585388, 0.9982912, -0.04432548, 0.038078103, -16.025837, 20.801657, 0.8516909)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2040265971]
 
-[node name="Test" type="CSGBox3D" parent="." unique_id=197795800]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4596577, 0)
+[node name="TacticalPlayer" type="CharacterBody3D" parent="." unique_id=77076910 node_paths=PackedStringArray("_collisionShape", "_yawPivot", "_stancePivot", "_leanPivot", "_pitchPivot", "_camera")]
+script = ExtResource("8_6y7pd")
+_collisionShape = NodePath("CollisionShape3D")
+_yawPivot = NodePath("YawPivot")
+_stancePivot = NodePath("YawPivot/StancePivot")
+_leanPivot = NodePath("YawPivot/StancePivot/LeanPivot")
+_pitchPivot = NodePath("YawPivot/StancePivot/LeanPivot/PitchPivot")
+_camera = NodePath("YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TacticalPlayer" unique_id=1770672308]
+shape = SubResource("CapsuleShape3D_54ssr")
+
+[node name="YawPivot" type="Node3D" parent="TacticalPlayer" unique_id=2056548388]
+
+[node name="StancePivot" type="Node3D" parent="TacticalPlayer/YawPivot" unique_id=661130556]
+
+[node name="LeanPivot" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot" unique_id=1393505258]
+
+[node name="PitchPivot" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot" unique_id=1593125480]
+
+[node name="Camera3D" type="Camera3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot" unique_id=1128396449]
+
+[node name="WeaponSwayOffset" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D" unique_id=275118266]

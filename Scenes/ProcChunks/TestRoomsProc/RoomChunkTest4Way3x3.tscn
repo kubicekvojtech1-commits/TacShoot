@@ -5,7 +5,6 @@
 
 [node name="RoomChunkTestStraight3x3" type="Node3D" unique_id=776587638 node_paths=PackedStringArray("RoomCenter")]
 script = ExtResource("1_30xym")
-RoomRadius = 2.0
 RoomCenter = NodePath("RoomCenter")
 
 [node name="TestRoom3x3Straight" parent="." unique_id=744608824 instance=ExtResource("2_30xym")]
