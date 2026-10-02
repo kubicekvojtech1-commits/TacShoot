@@ -1,0 +1,121 @@
+[gd_scene format=3 uid="uid://qf2koafd58i5"]
+
+[ext_resource type="Script" uid="uid://bxmdd8bmdj634" path="res://Scripts/UI/PlayerHud.cs" id="1_tpfxl"]
+
+[node name="PlayerHud" type="CanvasLayer" unique_id=1669009914 node_paths=PackedStringArray("_hpBar", "_staminaBar", "_hotbarBox", "_weaponNameLabel", "_ammoLabel", "_mainOverlay", "_tabMenu")]
+script = ExtResource("1_tpfxl")
+_hpBar = NodePath("MainOverlay/VitalsBox/HPBar")
+_staminaBar = NodePath("MainOverlay/VitalsBox/StaminaBar")
+_hotbarBox = NodePath("MainOverlay/HotbarBox")
+_weaponNameLabel = NodePath("MainOverlay/WeaponInfoBox/WeaponNameLabel")
+_ammoLabel = NodePath("MainOverlay/WeaponInfoBox/AmmoLabel")
+_mainOverlay = NodePath("MainOverlay")
+_tabMenu = NodePath("TabMenu")
+
+[node name="MainOverlay" type="Control" parent="." unique_id=22315120]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VitalsBox" type="VBoxContainer" parent="MainOverlay" unique_id=111783253]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 19.205
+offset_top = -79.65503
+offset_right = 59.205
+offset_bottom = -21.65503
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="HPBar" type="ProgressBar" parent="MainOverlay/VitalsBox" unique_id=1863857781]
+layout_mode = 2
+mouse_filter = 2
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="StaminaBar" type="ProgressBar" parent="MainOverlay/VitalsBox" unique_id=721808542]
+layout_mode = 2
+mouse_filter = 2
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="HotbarBox" type="HBoxContainer" parent="MainOverlay" unique_id=1387106161]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="WeaponInfoBox" type="VBoxContainer" parent="MainOverlay" unique_id=1178340247]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -88.59497
+offset_top = -67.150024
+offset_right = -15.594971
+offset_bottom = -17.150024
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="WeaponNameLabel" type="Label" parent="MainOverlay/WeaponInfoBox" unique_id=550328158]
+layout_mode = 2
+text = "Unarmed"
+horizontal_alignment = 2
+
+[node name="AmmoLabel" type="Label" parent="MainOverlay/WeaponInfoBox" unique_id=1840988751]
+layout_mode = 2
+text = "0 / 0"
+horizontal_alignment = 2
+
+[node name="TabMenu" type="Control" parent="." unique_id=900935197]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="TabMenu" unique_id=48324649]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7058824)
+
+[node name="Container" type="Container" parent="TabMenu" unique_id=616974001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="TabMenu/Container" unique_id=1679651875]
+layout_mode = 2
+text = "WIP
+"
+horizontal_alignment = 1

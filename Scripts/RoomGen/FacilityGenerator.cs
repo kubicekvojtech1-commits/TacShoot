@@ -39,7 +39,7 @@ public partial class FacilityGenerator : Node3D
 
 	private enum GenState { NotStarted, SpawningRooms, CappingSockets, Finished }
 	private GenState _currentState = GenState.NotStarted;
-
+	
 	public override void _Ready()
 	{
 		_rng.Randomize();

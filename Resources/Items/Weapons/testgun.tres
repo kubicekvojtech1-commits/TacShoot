@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://c4ydm33ttos58"]
+
+[ext_resource type="Script" uid="uid://bugmr6f3swfaq" path="res://Scripts/Items/WeaponData.cs" id="1_aa6uk"]
+[ext_resource type="PackedScene" uid="uid://bk45h6kbw411j" path="res://Scenes/Items/Weapons/WorldItem_TestGun.tscn" id="2_6t5ml"]
+[ext_resource type="PackedScene" uid="uid://cjxb87clnkdyd" path="res://Scenes/Items/Weapons/ViewModel_TestGun.tscn" id="2_dlmij"]
+
+[resource]
+script = ExtResource("1_aa6uk")
+ItemId = "wpn_testgun_01"
+DisplayName = "Test Gun"
+ViewModelPrefab = ExtResource("2_dlmij")
+WorldModelPrefab = ExtResource("2_6t5ml")
+metadata/_custom_type_script = "uid://bugmr6f3swfaq"

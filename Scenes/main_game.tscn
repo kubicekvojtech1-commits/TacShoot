@@ -7,7 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://b323agsucqfu1" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestTriangle.tscn" id="5_18r40"]
 [ext_resource type="PackedScene" uid="uid://codqqvx16oeaq" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestBlocker.tscn" id="5_bb2iq"]
 [ext_resource type="PackedScene" uid="uid://q3mtllrywd81" path="res://Scenes/ProcChunks/TestRoomsProc/RoomChunkTestEND3x3.tscn" id="6_18r40"]
-[ext_resource type="Script" uid="uid://xoq1aaxojd4j" path="res://Scripts/TacticalPlayerController.cs" id="8_6y7pd"]
+[ext_resource type="Script" uid="uid://xoq1aaxojd4j" path="res://Scripts/Player/TacticalPlayerController.cs" id="8_6y7pd"]
+[ext_resource type="Script" uid="uid://b1wybeej3trox" path="res://Scripts/Player/ActiveItemHandler.cs" id="9_73nn6"]
+[ext_resource type="PackedScene" uid="uid://qf2koafd58i5" path="res://Scenes/UI/PlayerHud.tscn" id="9_r0mdn"]
+[ext_resource type="Script" uid="uid://d3r3v7wk8sc4" path="res://Scripts/Player/PlayerInventory.cs" id="10_0xqxu"]
+[ext_resource type="Script" uid="uid://bdafnjht3a03b" path="res://Scripts/Player/PlayerInteractor.cs" id="12_tpqse"]
+[ext_resource type="Script" uid="uid://cwm2lkhetkxoy" path="res://Scenes/Items/LevelItemSpawner.cs" id="13_i47ox"]
+[ext_resource type="Resource" uid="uid://c4ydm33ttos58" path="res://Resources/Items/Weapons/testgun.tres" id="14_sftma"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54ssr"]
 
@@ -21,7 +27,7 @@ _deadEndPrefab = ExtResource("6_18r40")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2040265971]
 
-[node name="TacticalPlayer" type="CharacterBody3D" parent="." unique_id=77076910 node_paths=PackedStringArray("_collisionShape", "_yawPivot", "_stancePivot", "_leanPivot", "_pitchPivot", "_camera")]
+[node name="TacticalPlayer" type="CharacterBody3D" parent="." unique_id=77076910 node_paths=PackedStringArray("_collisionShape", "_yawPivot", "_stancePivot", "_leanPivot", "_pitchPivot", "_camera", "_interactor")]
 script = ExtResource("8_6y7pd")
 _collisionShape = NodePath("CollisionShape3D")
 _yawPivot = NodePath("YawPivot")
@@ -29,9 +35,16 @@ _stancePivot = NodePath("YawPivot/StancePivot")
 _leanPivot = NodePath("YawPivot/StancePivot/LeanPivot")
 _pitchPivot = NodePath("YawPivot/StancePivot/LeanPivot/PitchPivot")
 _camera = NodePath("YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D")
+_interactor = NodePath("YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/PlayerInteractor")
+
+[node name="PlayerHud" parent="TacticalPlayer" unique_id=1669009914 instance=ExtResource("9_r0mdn")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TacticalPlayer" unique_id=1770672308]
 shape = SubResource("CapsuleShape3D_54ssr")
+
+[node name="PlayerInventory" type="Node" parent="TacticalPlayer" unique_id=1947131392 node_paths=PackedStringArray("_itemHandler")]
+script = ExtResource("10_0xqxu")
+_itemHandler = NodePath("../YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/WeaponSwayOffset/ActiveItemHandler")
 
 [node name="YawPivot" type="Node3D" parent="TacticalPlayer" unique_id=2056548388]
 
@@ -42,5 +55,31 @@ shape = SubResource("CapsuleShape3D_54ssr")
 [node name="PitchPivot" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot" unique_id=1593125480]
 
 [node name="Camera3D" type="Camera3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot" unique_id=1128396449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50741357, 0)
 
 [node name="WeaponSwayOffset" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D" unique_id=275118266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25029457, -0.6193074)
+
+[node name="ActiveItemHandler" type="Node3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/WeaponSwayOffset" unique_id=479291266 node_paths=PackedStringArray("_playerCamera")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.040233426)
+script = ExtResource("9_73nn6")
+_playerCamera = NodePath("../..")
+
+[node name="PlayerInteractor" type="RayCast3D" parent="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D" unique_id=1082190128]
+target_position = Vector3(0, 0, -2.5)
+collision_mask = 12
+collide_with_areas = true
+script = ExtResource("12_tpqse")
+
+[node name="TestGunSpawn" type="Node3D" parent="." unique_id=1836889449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.9539057)
+script = ExtResource("13_i47ox")
+_itemToSpawn = ExtResource("14_sftma")
+
+[connection signal="HealthChanged" from="TacticalPlayer" to="TacticalPlayer/PlayerHud" method="OnHealthChanged"]
+[connection signal="MenuToggled" from="TacticalPlayer" to="TacticalPlayer/PlayerHud" method="ToggleTabMenu"]
+[connection signal="StaminaChanged" from="TacticalPlayer" to="TacticalPlayer/PlayerHud" method="OnStaminaChanged"]
+[connection signal="AmmoChanged" from="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/WeaponSwayOffset/ActiveItemHandler" to="TacticalPlayer/PlayerHud" method="OnAmmoChanged"]
+[connection signal="HotbarSlotSelected" from="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/WeaponSwayOffset/ActiveItemHandler" to="TacticalPlayer/PlayerHud" method="OnHotbarSlotChanged"]
+[connection signal="WeaponEquipped" from="TacticalPlayer/YawPivot/StancePivot/LeanPivot/PitchPivot/Camera3D/WeaponSwayOffset/ActiveItemHandler" to="TacticalPlayer/PlayerHud" method="OnWeaponEquipped"]

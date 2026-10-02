@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cjxb87clnkdyd"]
+
+[node name="ViewModelTestGun" type="Node3D" unique_id=47250892]
+
+[node name="Receiver" type="CSGBox3D" parent="." unique_id=2005554457]
+transform = Transform3D(0.05, 0, 0, 0, 0.1, 0, 0, 0, 0.4, 0, 0, 0)
+
+[node name="Grip" type="CSGBox3D" parent="." unique_id=526293181]
+transform = Transform3D(0.04, 0, 0, 0, 0.15, 0, 0, 0, 0.05, 0, -0.115216374, 0.15114328)
+
+[node name="Barrel" type="CSGBox3D" parent="." unique_id=2031223108]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.5, 0, 0, -0.05991234)

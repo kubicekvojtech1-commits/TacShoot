@@ -1,0 +1,33 @@
+### FACILITY GENERATOR
+Here is the architectural summary of the facility generation system, designed to act as a reference for integrating AI, minimaps, and mission logic:
+
+Core Algorithm: The system uses a Breadth-First Search (BFS) state machine. It expands outward evenly from a starting room, placing rooms on a queue of open Marker3D sockets until a total _maxBudget is consumed.
+
+Data Component (RoomChunk.cs): Each prefab stores its own tactical data, including a RoomCenter marker (useful for AI/Minimaps), an array of 2D coordinates defining its FloorplanPolygon, a GenerationCost, and a SelectionWeight for probability distribution.
+
+Orphan Node Math: To prevent Godot Transform errors and garbage collection spikes, candidate rooms are instantiated in memory as orphan nodes. Their target Transform3D is manually injected into their math functions to calculate their future footprint before they are ever added to the SceneTree.
+
+Collision Detection: Overlaps are prevented using 2D Polygon intersections (Geometry2D.IntersectPolygons). This allows for complex tactical shapes (triangles, L-shapes, T-junctions) to be rotated and placed without the false-positives of AABBs or bounding spheres.
+
+Fallback & Capping System:
+
+If a candidate room overlaps an existing room or exceeds the remaining budget, it is safely destroyed (QueueFree()) and a flat DoorBlocker mesh is snapped to the socket.
+
+Once the budget reaches its limit, the system enters a "Capping" phase, filling all remaining open sockets in the queue with 3D DeadEnd prefabs (if space allows) or blockers, ensuring a fully sealed, watertight level.
+###
+
+### PLAYER CONTROLLER and INVENTORY
+The foundational architecture we have built so far relies on strict decoupling, data-driven design, and event-driven communication to ensure performance and modularity for a tactical FPS.
+
+Decoupled Tactical Controller: The player character uses a CharacterBody3D where movement physics (inertia, acceleration, gravity) are separated from the camera rotation. By rotating a discrete YawPivot instead of the collision capsule, we prevent the character body from snagging on world geometry. Stance transitions (stand, crouch, prone) smoothly interpolate the collision capsule's height, while lean mechanics operate on an independent pivot to peek corners without moving the body.
+
+Data-Driven Item Architecture: Weapons and items are entirely modular, driven by custom C# Resource files (ItemData, WeaponData). This completely separates Data (stats, ammo, RPM), Logic (the ActiveItemHandler managing shooting and state), and Presentation (the First-Person View Model vs. the physical World Model).
+
+Procedural Weapon Animation: To avoid stiff, pre-baked animations, the weapon handler uses procedural sway. It continuously calculates mouse look inertia (dragging the weapon behind the camera movement) and breathing (using sine and cosine waves for a figure-8 pattern), smoothly interpolating the view model's transform every frame.
+
+Event-Driven UI: The HUD operates on a strict zero-polling architecture. Instead of the UI checking the player's health or ammo every frame, the underlying systems (TacticalPlayerController, ActiveItemHandler) emit Godot [Signal]s only when values change. The UI passively listens to these signals to update progress bars and text labels.
+
+Inventory & Interaction Loop: World interaction is governed by an IInteractable interface and a zero-allocation RayCast3D (PlayerInteractor). When looking at a WorldItem, the interactor passes the item's data to the PlayerInventory.
+
+Safe Instantiation Pipeline: To prevent circular dependencies between .tres data and .tscn prefabs, world items are completely data-agnostic. They are spawned into the world via LevelItemSpawner nodes, which inject the appropriate ItemData at runtime. When dropping an item, the inventory clears the player's hands, instantiates the physical model, injects its data, and applies a rigid body impulse to throw it into the world.
+###

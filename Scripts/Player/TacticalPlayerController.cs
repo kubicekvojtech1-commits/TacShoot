@@ -16,6 +16,7 @@ public partial class TacticalPlayerController : CharacterBody3D
 	[Export] private Node3D _leanPivot;
 	[Export] private Node3D _pitchPivot;
 	[Export] private Camera3D _camera;
+	[Export] private PlayerInteractor _interactor;
 
 	[ExportGroup("Movement Settings")]
 	[Export] private float _walkSpeed = 2.8f;
@@ -42,11 +43,27 @@ public partial class TacticalPlayerController : CharacterBody3D
 	[Export] private float _maxPitch = 85f;
 	[Export] private float _minPitch = -85f;
 
-	// State
+	[ExportGroup("Vitals Settings")]
+	[Export] private float _maxHealth = 100f;
+	[Export] private float _maxStamina = 100f;
+	[Export] private float _staminaDrainRate = 15f; // Per second sprinting
+	[Export] private float _staminaRegenRate = 10f; // Per second resting
+
+	// UI Signals
+	[Signal] public delegate void HealthChangedEventHandler(float current, float max);
+	[Signal] public delegate void StaminaChangedEventHandler(float current, float max);
+	[Signal] public delegate void MenuToggledEventHandler(bool isOpen);
+
+	// Core State
 	private Stance _currentStance = Stance.Stand;
 	private CapsuleShape3D _capsule;
 	private Vector2 _mouseInput;
 	private bool _isSprinting;
+	public bool IsMenuOpen { get; private set; }
+	
+	// Vitals State
+	private float _currentHealth;
+	private float _currentStamina;
 	
 	// Target Values for Interpolation
 	private float _targetHeight;
@@ -66,13 +83,64 @@ public partial class TacticalPlayerController : CharacterBody3D
 		}
 
 		_targetHeight = _standHeight;
+		
+		// Initialize vitals
+		_currentHealth = _maxHealth;
+		_currentStamina = _maxStamina;
+
+		// Assign player RID to Meta for weapons/raycasts to ignore
+		SetMeta("PlayerRID", GetRid());
+
+		// Emit initial values next frame to ensure HUD is fully instantiated and ready to receive
+		CallDeferred(MethodName.EmitInitialVitals);
+	}
+
+	private void EmitInitialVitals()
+	{
+		EmitSignal(SignalName.HealthChanged, _currentHealth, _maxHealth);
+		EmitSignal(SignalName.StaminaChanged, _currentStamina, _maxStamina);
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
+		// Handle TAB Menu
+		if (@event.IsActionPressed("ui_focus_next")) // Usually mapped to TAB
+		{
+			IsMenuOpen = !IsMenuOpen;
+			Input.MouseMode = IsMenuOpen ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
+			EmitSignal(SignalName.MenuToggled, IsMenuOpen);
+			return;
+		}
+		
+		// Handle Item Dropping
+		if (@event.IsActionPressed("drop") && !IsMenuOpen)
+		{
+			var inventory = GetNodeOrNull<PlayerInventory>("PlayerInventory");
+			if (inventory != null)
+			{
+				// Calculate drop position half a meter in front of the camera
+				Vector3 dropPos = _camera.GlobalPosition - _camera.GlobalTransform.Basis.Z * 0.5f;
+				Vector3 throwDir = -_camera.GlobalTransform.Basis.Z;
+				
+				inventory.DropEquippedItem(dropPos, throwDir);
+			}
+			return;
+		}
+		
+		if (@event.IsActionPressed("interact") && !IsMenuOpen)
+		{
+			// Pass 'this' (the root player node) so items can find the PlayerInventory child
+			_interactor?.TryInteract(this);
+			return;
+		}
+
+		if (IsMenuOpen) return; // Block further input if menu is open
+
+		// Capture Mouse Look
 		if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
-			_mouseInput = mouseMotion.Relative;
+			// Change this from '=' to '+=' to accumulate all movement between frames
+			_mouseInput += mouseMotion.Relative;
 		}
 	}
 
@@ -80,10 +148,24 @@ public partial class TacticalPlayerController : CharacterBody3D
 	{
 		float fDelta = (float)delta;
 
-		HandleCameraLook(fDelta);
-		HandleStance(fDelta);
-		HandleLeaning(fDelta);
-		HandleMovement(fDelta);
+		if (!IsMenuOpen)
+		{
+			HandleCameraLook(fDelta);
+			HandleStance(fDelta);
+			HandleLeaning(fDelta);
+			HandleMovement(fDelta);
+		}
+		else
+		{
+			// Decelerate smoothly if the player opens the menu while moving
+			Vector3 velocity = Velocity;
+			velocity.X = Mathf.MoveToward(velocity.X, 0, _friction * fDelta);
+			velocity.Z = Mathf.MoveToward(velocity.Z, 0, _friction * fDelta);
+			Velocity = velocity;
+			MoveAndSlide();
+		}
+		
+		ProcessVitals(fDelta);
 	}
 
 	private void HandleCameraLook(float delta)
@@ -106,7 +188,6 @@ public partial class TacticalPlayerController : CharacterBody3D
 
 	private void HandleStance(float delta)
 	{
-		// Stance Input handling
 		if (Input.IsActionJustPressed("prone"))
 		{
 			_currentStance = _currentStance == Stance.Prone ? Stance.Stand : Stance.Prone;
@@ -116,7 +197,6 @@ public partial class TacticalPlayerController : CharacterBody3D
 			_currentStance = _currentStance == Stance.Crouch ? Stance.Stand : Stance.Crouch;
 		}
 
-		// Determine target height
 		switch (_currentStance)
 		{
 			case Stance.Stand: _targetHeight = _standHeight; break;
@@ -127,10 +207,10 @@ public partial class TacticalPlayerController : CharacterBody3D
 		// Interpolate Capsule Height
 		_capsule.Height = Mathf.MoveToward(_capsule.Height, _targetHeight, _stanceTransitionSpeed * delta);
 		
-		// Offset collision shape to keep feet on the ground
+		// Keep feet on the ground by offsetting position
 		_collisionShape.Position = new Vector3(0, _capsule.Height / 2f, 0);
 
-		// Interpolate Camera Height (Eye level is slightly below top of capsule)
+		// Interpolate Camera Height
 		Vector3 stancePos = _stancePivot.Position;
 		stancePos.Y = Mathf.Lerp(stancePos.Y, _capsule.Height * 0.9f, _stanceTransitionSpeed * delta);
 		_stancePivot.Position = stancePos;
@@ -138,7 +218,6 @@ public partial class TacticalPlayerController : CharacterBody3D
 
 	private void HandleLeaning(float delta)
 	{
-		// Leaning is disabled while prone
 		if (_currentStance == Stance.Prone)
 		{
 			_targetLeanRotation = 0f;
@@ -149,16 +228,14 @@ public partial class TacticalPlayerController : CharacterBody3D
 			float leanInput = Input.GetAxis("lean_left", "lean_right");
 			_targetLeanRotation = leanInput * Mathf.DegToRad(-_leanAngle);
 			_targetLeanOffset = leanInput * _leanOffset;
-			
-			// TODO (Architecture Note): Introduce a RayCast3D here extending left/right. 
-			// If it hits a wall, clamp _targetLeanOffset to prevent clipping the camera through level geometry.
 		}
 
-		// Interpolate Lean Pivot
+		// Interpolate Lean Rotation
 		Vector3 leanRot = _leanPivot.Rotation;
 		leanRot.Z = Mathf.Lerp(leanRot.Z, _targetLeanRotation, _leanSpeed * delta);
 		_leanPivot.Rotation = leanRot;
 
+		// Interpolate Lean Position
 		Vector3 leanPos = _leanPivot.Position;
 		leanPos.X = Mathf.Lerp(leanPos.X, _targetLeanOffset, _leanSpeed * delta);
 		_leanPivot.Position = leanPos;
@@ -173,24 +250,30 @@ public partial class TacticalPlayerController : CharacterBody3D
 		{
 			velocity.Y -= _gravity * delta;
 		}
-		else if (Input.IsActionJustPressed("jump") && _currentStance == Stance.Stand)
+		else if (Input.IsActionJustPressed("jump") && _currentStance == Stance.Stand && _currentStamina > 10f)
 		{
-			velocity.Y = 4.5f; // Base jump velocity
+			velocity.Y = 4.5f; 
+			_currentStamina -= 10f; // Jumping costs stamina
+			EmitSignal(SignalName.StaminaChanged, _currentStamina, _maxStamina);
 		}
 
-		// Determine target speed based on stance and sprint state
-		_isSprinting = Input.IsActionPressed("sprint") && _currentStance == Stance.Stand && !Input.IsActionPressed("move_backward");
+		// Determine target speed based on stance, stamina, and sprint state
+		_isSprinting = Input.IsActionPressed("sprint") && 
+					   _currentStance == Stance.Stand && 
+					   !Input.IsActionPressed("move_backward") && 
+					   _currentStamina > 0;
+
 		float targetSpeed = _walkSpeed;
 		
 		if (_currentStance == Stance.Crouch) targetSpeed = _crouchSpeed;
 		else if (_currentStance == Stance.Prone) targetSpeed = _proneSpeed;
 		else if (_isSprinting) targetSpeed = _sprintSpeed;
 
-		// Get Input Direction relative to the YAW PIVOT (where the player is looking)
+		// Get Input Direction relative to where the player is looking
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (_yawPivot.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
-		// Apply Acceleration and Friction (Inertia modeling)
+		// Apply Acceleration and Friction
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = Mathf.MoveToward(velocity.X, direction.X * targetSpeed, _acceleration * delta);
@@ -204,5 +287,28 @@ public partial class TacticalPlayerController : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	private void ProcessVitals(float delta)
+	{
+		bool staminaChanged = false;
+
+		// Drain stamina if moving and sprinting
+		if (_isSprinting && Velocity.LengthSquared() > 0.1f)
+		{
+			_currentStamina = Mathf.Max(0, _currentStamina - (_staminaDrainRate * delta));
+			staminaChanged = true;
+		}
+		// Regen stamina if not sprinting
+		else if (_currentStamina < _maxStamina)
+		{
+			_currentStamina = Mathf.Min(_maxStamina, _currentStamina + (_staminaRegenRate * delta));
+			staminaChanged = true;
+		}
+
+		if (staminaChanged)
+		{
+			EmitSignal(SignalName.StaminaChanged, _currentStamina, _maxStamina);
+		}
 	}
 }
